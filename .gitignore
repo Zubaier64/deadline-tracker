@@ -1,0 +1,8 @@
+# Go backend
+backend/tasks.db
+*.exe
+
+# Svelte frontend
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
