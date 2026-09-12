@@ -130,8 +130,8 @@ func initDB() {
 }
 
 var allowedOrigins = map[string]bool{
-	"http://localhost:5173": true,
-	// we'll add your deployed frontend URL here once we have it
+	"http://localhost:5173":              true,
+	"https://neon-banoffee-ee24de.netlify.app": true,
 }
 
 func withCORS(next http.Handler) http.Handler {
