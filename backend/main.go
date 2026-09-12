@@ -7,6 +7,7 @@ import (
 	"time"
 	"net/http"
 	"encoding/json"
+	"os"
 	_ "modernc.org/sqlite"
 )
 
@@ -32,8 +33,12 @@ func main() {
 	mux.HandleFunc("POST /tasks", createTaskHandler)
 	mux.HandleFunc("DELETE /tasks/{id}", deleteTaskHandler)
 
-	fmt.Println("Server starting on :8080...")
-	http.ListenAndServe(":8080", withCORS(mux))
+	port := os.Getenv("PORT")
+if port == "" {
+	port = "8080"
+}
+fmt.Println("Server starting on :" + port + "...")
+http.ListenAndServe(":"+port, withCORS(mux))
 }
 
 func listTasksHandler(w http.ResponseWriter, r *http.Request) {
@@ -124,9 +129,17 @@ func initDB() {
 	}
 }
 
+var allowedOrigins = map[string]bool{
+	"http://localhost:5173": true,
+	// we'll add your deployed frontend URL here once we have it
+}
+
 func withCORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+		origin := r.Header.Get("Origin")
+		if allowedOrigins[origin] {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+		}
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
