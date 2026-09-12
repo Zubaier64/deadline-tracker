@@ -1,15 +1,17 @@
 <script>
+	import { API_URL } from '$lib/api.js';
+
 	let tasks = $state([]);
 	let description = $state('');
 	let dueDate = $state('');
 
 	async function loadTasks() {
-		const res = await fetch('http://localhost:8080/tasks');
+		const res = await fetch(`${API_URL}/tasks`);
 		tasks = await res.json();
 	}
 
 	async function addTask() {
-		await fetch('http://localhost:8080/tasks', {
+		await fetch(`${API_URL}/tasks`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ description, due_date: dueDate })
@@ -21,7 +23,7 @@
 	}
 
 	async function deleteTask(id) {
-		await fetch(`http://localhost:8080/tasks/${id}`, { method: 'DELETE' });
+		await fetch(`${API_URL}/tasks/${id}`, { method: 'DELETE' });
 		await loadTasks();
 	}
 
